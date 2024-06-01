@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://csfeobajl37vx"]
+
+[ext_resource type="Script" path="res://Components/Player/playerController.gd" id="1_5b6lm"]
+[ext_resource type="PackedScene" uid="uid://bxkgbbnmailn7" path="res://Components/Player/playerCharacter.tscn" id="2_7ob5o"]
+
+[node name="Player" type="Node2D"]
+z_index = 10
+position = Vector2(1152, 640)
+script = ExtResource("1_5b6lm")
+currentPosition = Vector2(9, 5)
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("2_7ob5o")]
+
+[connection signal="area_entered" from="PlayerCharacter" to="." method="_on_player_character_area_entered"]

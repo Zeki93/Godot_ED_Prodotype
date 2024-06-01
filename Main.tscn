@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cvibv208wfc58"]
+[gd_scene load_steps=10 format=3 uid="uid://cvibv208wfc58"]
 
+[ext_resource type="PackedScene" uid="uid://2p7bwv6j1y5k" path="res://Components/Enemy/enemy.tscn" id="1_6rfp8"]
 [ext_resource type="Texture2D" uid="uid://be0qrcrlxbk0o" path="res://Assets/kenney_abstract-platformer/Tilesheet/tilesheet_complete.png" id="1_b81qa"]
-[ext_resource type="PackedScene" uid="uid://gcufyn2twaff" path="res://enemy.tscn" id="1_ti1n8"]
-[ext_resource type="PackedScene" uid="uid://dnflou35hwtjh" path="res://player.tscn" id="2_kan41"]
+[ext_resource type="PackedScene" uid="uid://csfeobajl37vx" path="res://Components/Player/player.tscn" id="3_bujjx"]
+[ext_resource type="PackedScene" uid="uid://cil8b4ieuh4qa" path="res://Components/Spawner/spawner.tscn" id="4_syj30"]
+[ext_resource type="Script" path="res://Components/EventHandler/EventHandler.gd" id="6_o07oc"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hcm84"]
 
@@ -283,12 +285,9 @@ pattern_0 = SubResource("TileMapPattern_f1syq")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Enemy" parent="." instance=ExtResource("1_ti1n8")]
-position = Vector2(64, 64)
-
 [node name="TileMap" type="TileMap" parent="."]
 material = SubResource("CanvasItemMaterial_hcm84")
-position = Vector2(1, 0)
+position = Vector2(64, 64)
 scale = Vector2(2, 2)
 tile_set = SubResource("TileSet_0vh8j")
 format = 2
@@ -298,27 +297,54 @@ layer_0/tile_data = PackedInt32Array(65537, 1114112, 8, 0, 1114112, 8, -1, 11141
 layer_1/name = "foreground"
 layer_1/modulate = Color(0.568627, 0.568627, 0.568627, 1)
 layer_1/z_index = 1
-layer_1/tile_data = PackedInt32Array(262152, 983040, 4, -65537, 786432, 8, -196611, 983040, 3, 262141, 983040, 3, -262139, 983040, 3, 1, 983040, 3, 655348, 1114112, 8, 720884, 1048576, 8, 655349, 1048576, 8, 720885, 1114112, 8)
+layer_1/tile_data = PackedInt32Array(262152, 983040, 4, -196611, 983040, 3, 262141, 983040, 3, -262139, 983040, 3, 1, 983040, 3, 655348, 1114112, 8, 720884, 1048576, 8, 655349, 1048576, 8, 720885, 1114112, 8, -131079, 786432, 8)
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
-
-[node name="Player" parent="." instance=ExtResource("2_kan41")]
-z_index = 2
-position = Vector2(1088, 576)
-
 [node name="Map" type="Node2D" parent="."]
 
-[node name="Spawner" type="Node2D" parent="Map"]
-position = Vector2(192, 64)
+[node name="Spawners" type="Node2D" parent="Map"]
 
-[node name="Spawner2" type="Node2D" parent="Map"]
-position = Vector2(-320, 438)
+[node name="Spawner" parent="Map/Spawners" groups=["spawners"] instance=ExtResource("4_syj30")]
+z_index = 2
+position = Vector2(256, 128)
+mobScene = ExtResource("1_6rfp8")
+spawnRate = 4
+radius = 35.0
+currentPosition = Vector2(2, 1)
 
-[node name="Spawner3" type="Node2D" parent="Map"]
-position = Vector2(-320, -438)
+[node name="Spawner2" parent="Map/Spawners" groups=["spawners"] instance=ExtResource("4_syj30")]
+z_index = 2
+position = Vector2(-256, 512)
+mobScene = ExtResource("1_6rfp8")
+spawnRate = 4
+radius = 35.0
+currentPosition = Vector2(-2, 4)
 
-[node name="Spawner4" type="Node2D" parent="Map"]
-position = Vector2(704, -438)
+[node name="Spawner3" parent="Map/Spawners" groups=["spawners"] instance=ExtResource("4_syj30")]
+z_index = 2
+position = Vector2(-256, -384)
+mobScene = ExtResource("1_6rfp8")
+spawnRate = 4
+radius = 35.0
+currentPosition = Vector2(-2, -3)
+
+[node name="Spawner4" parent="Map/Spawners" groups=["spawners"] instance=ExtResource("4_syj30")]
+z_index = 2
+position = Vector2(768, -384)
+mobScene = ExtResource("1_6rfp8")
+spawnRate = 4
+radius = 35.0
+currentPosition = Vector2(6, -3)
+
+[node name="Player" parent="." instance=ExtResource("3_bujjx")]
+
+[node name="Camera2D2" type="Camera2D" parent="Player"]
+offset = Vector2(-128, -128)
+zoom = Vector2(0.62, 0.62)
+position_smoothing_enabled = true
+
+[node name="EventHandler" type="Node2D" parent="."]
+script = ExtResource("6_o07oc")
+
+[connection signal="playerMoved" from="Player" to="EventHandler" method="_on_player_player_moved"]
